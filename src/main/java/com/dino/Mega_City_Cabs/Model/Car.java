@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
     private String regNumber;
     private String model;
     private String make;

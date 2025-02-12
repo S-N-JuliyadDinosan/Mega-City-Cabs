@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class SystemLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
     private String actionPerformed; // Login , Add booking
     private LocalDateTime timeStamp;
 

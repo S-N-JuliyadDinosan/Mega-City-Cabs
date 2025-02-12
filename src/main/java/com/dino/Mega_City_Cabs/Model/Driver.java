@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
     private String name;
     private String username;
     private String password;

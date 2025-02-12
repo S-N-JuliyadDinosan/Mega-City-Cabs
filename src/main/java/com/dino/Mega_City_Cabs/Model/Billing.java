@@ -19,7 +19,7 @@ public class Billing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
     private BigDecimal totalAmount;
     private BigDecimal taxAmount;
     private BigDecimal discount;

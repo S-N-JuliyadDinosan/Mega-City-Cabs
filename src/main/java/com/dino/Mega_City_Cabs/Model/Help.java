@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Help {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
     private String topic;
     private String description;
 }
