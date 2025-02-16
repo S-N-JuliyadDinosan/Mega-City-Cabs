@@ -9,16 +9,17 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminManager {
+public class AdminManager extends DateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String name;
-    private String userName;
-    private String password;
-    private String role;
-    @Lob
-    private byte[] image;
+    private String contactNumber;
+
+    @OneToOne   //For user credentials
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
 
 }

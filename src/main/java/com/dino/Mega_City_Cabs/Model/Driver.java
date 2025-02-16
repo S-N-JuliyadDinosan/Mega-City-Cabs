@@ -10,18 +10,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Driver {
+public class Driver extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String name;
-    private String username;
-    private String password;
-    @Lob
-    private byte[] image;
     private String nicNumber;
     private String drivingLicenseNumber;
     private String contactNumber;
     private String availabilityStatus;  //Available,On duty
+
+    @OneToOne   //For user credentials
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
 }

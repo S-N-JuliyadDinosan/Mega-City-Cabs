@@ -9,15 +9,17 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Car {
+public class Car extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String regNumber;
     private String model;
     private String make;
-    @Lob
-    private byte[] image;
     private String yearOfManufacture;
     private String status;   //Available,booked,Maintenance
+
+    @ManyToOne
+    @JoinColumn(name = "driver_id", nullable = true)
+    private Driver driver;
 }
