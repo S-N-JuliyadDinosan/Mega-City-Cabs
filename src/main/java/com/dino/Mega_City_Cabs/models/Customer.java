@@ -1,10 +1,9 @@
-package com.dino.Mega_City_Cabs.Model;
+package com.dino.Mega_City_Cabs.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.engine.internal.Cascade;
 
 import java.util.List;
 

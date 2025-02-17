@@ -1,4 +1,4 @@
-package com.dino.Mega_City_Cabs.Model;
+package com.dino.Mega_City_Cabs.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

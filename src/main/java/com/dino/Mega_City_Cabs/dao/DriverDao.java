@@ -1,7 +1,9 @@
 package com.dino.Mega_City_Cabs.dao;
 
-import com.dino.Mega_City_Cabs.Model.Driver;
+import com.dino.Mega_City_Cabs.models.Driver;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface DriverDao extends JpaRepository<Driver, Integer> {
+@Repository
+public interface DriverDao extends JpaRepository<Driver, Long> {
 }

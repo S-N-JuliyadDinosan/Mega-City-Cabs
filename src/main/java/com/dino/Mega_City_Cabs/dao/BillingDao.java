@@ -1,7 +1,9 @@
 package com.dino.Mega_City_Cabs.dao;
 
-import com.dino.Mega_City_Cabs.Model.Billing;
+import com.dino.Mega_City_Cabs.models.Billing;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface BillingDao extends JpaRepository<Billing,Integer> {
+@Repository
+public interface BillingDao extends JpaRepository<Billing,Long> {
 }
