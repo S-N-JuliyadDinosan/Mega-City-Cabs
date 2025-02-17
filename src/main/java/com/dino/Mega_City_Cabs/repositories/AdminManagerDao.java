@@ -1,4 +1,4 @@
-package com.dino.Mega_City_Cabs.dao;
+package com.dino.Mega_City_Cabs.repositories;
 
 import com.dino.Mega_City_Cabs.models.AdminManager;
 import org.springframework.data.jpa.repository.JpaRepository;
