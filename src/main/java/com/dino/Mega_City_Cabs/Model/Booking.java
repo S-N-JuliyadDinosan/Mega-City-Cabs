@@ -24,4 +24,16 @@ public class Booking extends DateAudit{
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "driver_id" , nullable = false)
+    private Driver driver;
+
+    @ManyToOne
+    @JoinColumn(name = "car_id", nullable = false)
+    private Car car;
+
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Billing billing;
+
 }

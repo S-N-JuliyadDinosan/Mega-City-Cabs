@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -22,4 +24,11 @@ public class Car extends DateAudit {
     @ManyToOne
     @JoinColumn(name = "driver_id", nullable = true)
     private Driver driver;
+
+    @ManyToOne
+    @JoinColumn(name = "adminManager_id", nullable = false)
+    private AdminManager adminManager;
+
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Car> cars;
 }

@@ -20,4 +20,9 @@ public class SystemLog {
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "adminManager_id", nullable = false)
+    private AdminManager adminManager;
+
 }
