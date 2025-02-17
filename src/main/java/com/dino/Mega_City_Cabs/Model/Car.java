@@ -30,5 +30,5 @@ public class Car extends DateAudit {
     private AdminManager adminManager;
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Car> cars;
+    private List<Booking> bookings;
 }
