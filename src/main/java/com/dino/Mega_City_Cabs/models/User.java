@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "users")
 public class User extends DateAudit{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,8 +18,9 @@ public class User extends DateAudit{
     private String password;
     private String role;  // Customer, Driver, Admin, Manager
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private AdminManager adminManager;
+    @OneToOne(cascade = CascadeType.PERSIST)    //For user credentials
+    @JoinColumn(name = "admin_id", nullable = false)
+    private Admin admin;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Customer customer;

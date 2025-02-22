@@ -1,9 +1,9 @@
 package com.dino.Mega_City_Cabs.repositories;
 
-import com.dino.Mega_City_Cabs.models.Booking;
+import com.dino.Mega_City_Cabs.models.Car;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BookingDao extends JpaRepository<Booking, Long> {
+public interface CarRepo extends JpaRepository<Car, Long> {
 }

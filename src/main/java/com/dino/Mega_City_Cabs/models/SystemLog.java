@@ -22,7 +22,7 @@ public class SystemLog {
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "adminManager_id", nullable = false)
-    private AdminManager adminManager;
+    @JoinColumn(name = "admin_id", nullable = false)
+    private Admin admin;
 
 }

@@ -16,10 +16,11 @@ public class DriverDto {
     private String drivingLicenseNumber;
     private String contactNumber;
     private String availabilityStatus;  // Available, On duty
+    private boolean havingCar;
 
     private Long userId;             // Reference to User
     private List<Long> carIds;       // List of Car IDs
     private List<Long> bookingIds;   // List of Booking IDs
-    private Long adminManagerId;     // Reference to AdminManager
+    private Long adminId;     // Reference to Admin
 
 }

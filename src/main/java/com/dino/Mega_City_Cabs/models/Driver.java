@@ -21,6 +21,7 @@ public class Driver extends DateAudit {
     private String drivingLicenseNumber;
     private String contactNumber;
     private String availabilityStatus;  //Available,On duty
+    private boolean havingCar;
 
     @OneToOne   //For user credentials
     @JoinColumn(name = "user_id", nullable = false)
@@ -33,7 +34,7 @@ public class Driver extends DateAudit {
     private List<Booking> bookings;
 
     @ManyToOne
-    @JoinColumn(name = "adminManager_id", nullable = false)
-    private AdminManager adminManager;
+    @JoinColumn(name = "admin_id", nullable = false)
+    private Admin admin;
 
 }

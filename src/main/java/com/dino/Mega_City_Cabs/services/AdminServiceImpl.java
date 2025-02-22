@@ -3,5 +3,5 @@ package com.dino.Mega_City_Cabs.services;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AdminManagerServiceImpl implements AdminManagerService{
+public class AdminServiceImpl implements AdminService {
 }

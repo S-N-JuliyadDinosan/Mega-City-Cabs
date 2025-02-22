@@ -26,8 +26,8 @@ public class Billing extends DateAudit {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @OneToOne
-    @JoinColumn(name = "booking_id", nullable = false )
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "booking_id")
     private Booking booking;
 
     

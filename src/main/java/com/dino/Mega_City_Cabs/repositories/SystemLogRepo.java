@@ -1,9 +1,9 @@
 package com.dino.Mega_City_Cabs.repositories;
 
-import com.dino.Mega_City_Cabs.models.Car;
+import com.dino.Mega_City_Cabs.models.SystemLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CarDao extends JpaRepository<Car, Long> {
+public interface SystemLogRepo extends JpaRepository<SystemLog,Long> {
 }

@@ -33,7 +33,7 @@ public class Booking extends DateAudit{
     @JoinColumn(name = "car_id", nullable = false)
     private Car car;
 
-    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "booking")
     private Billing billing;
 
 }

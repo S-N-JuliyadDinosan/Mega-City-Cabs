@@ -18,7 +18,7 @@ public class CarDto {
     private String status;   // Available, Booked, Maintenance
 
     private Long driverId;       // Reference to Driver
-    private Long adminManagerId; // Reference to AdminManager
+    private Long adminId; // Reference to Admin
     private List<Long> bookingIds; // List of Booking IDs
 
 

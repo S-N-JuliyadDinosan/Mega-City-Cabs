@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminManagerDto {
+public class AdminDto {
     private Long id;
     private String name;
     private String contactNumber;

@@ -13,7 +13,7 @@ public class UserDto {
     private String password;
     private String role;  // Customer, Driver, Admin, Manager
 
-    private Long adminManagerId;  // Reference to AdminManager
+    private Long adminId;  // Reference to Admin
     private Long customerId;      // Reference to Customer
     private Long driverId;        // Reference to Driver
 }

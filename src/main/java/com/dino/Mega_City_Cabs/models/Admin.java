@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminManager extends DateAudit {
+public class Admin extends DateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,17 +19,16 @@ public class AdminManager extends DateAudit {
     private String name;
     private String contactNumber;
 
-    @OneToOne   //For user credentials
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne(mappedBy = "admin")
     private User user;
 
-    @OneToMany(mappedBy = "adminManager" , cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "admin" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Car> cars;
 
-    @OneToMany(mappedBy = "adminManager" , cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "admin" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Driver> drivers;
 
-    @OneToMany(mappedBy = "adminManager" , cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "admin" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SystemLog> systemLogs;
 
 }

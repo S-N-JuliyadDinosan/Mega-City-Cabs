@@ -19,15 +19,15 @@ public class Car extends DateAudit {
     private String model;
     private String make;
     private String yearOfManufacture;
-    private String status;   //Available,booked,Maintenance
+    private String status;   //Not-assigned,Available,Booked,Maintenance
 
     @ManyToOne
     @JoinColumn(name = "driver_id", nullable = true)
     private Driver driver;
 
     @ManyToOne
-    @JoinColumn(name = "adminManager_id", nullable = false)
-    private AdminManager adminManager;
+    @JoinColumn(name = "admin_id", nullable = false)
+    private Admin admin;
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings;

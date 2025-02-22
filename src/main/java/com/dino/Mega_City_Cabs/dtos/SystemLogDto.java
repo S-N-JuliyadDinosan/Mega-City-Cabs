@@ -15,5 +15,5 @@ public class SystemLogDto {
     private LocalDateTime timeStamp;
 
     private Long customerId;      // Reference to Customer
-    private Long adminManagerId;  // Reference to AdminManager
+    private Long adminId;  // Reference to Admin
 }
