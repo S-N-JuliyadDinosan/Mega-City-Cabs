@@ -1,5 +1,6 @@
 package com.dino.Mega_City_Cabs.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -34,14 +35,17 @@ public class User extends DateAudit implements UserDetails {
 
     @OneToOne(cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "admin_id", nullable = true)
+    @JsonManagedReference // Serializes Admin from User
     private Admin admin;
 
     @OneToOne(cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "customer_id", nullable = true)
+    @JsonManagedReference // Serializes Customer from User
     private Customer customer;
 
     @OneToOne(cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "driver_id", nullable = true)
+    @JsonManagedReference // Serializes Driver from User
     private Driver driver;
 
     // Factory method for creating users

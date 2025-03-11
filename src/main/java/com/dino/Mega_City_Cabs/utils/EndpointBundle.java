@@ -18,6 +18,10 @@ public class EndpointBundle {
     //Admin
 	public static final String ADMIN = BASE_URL + "/admin";
 
+	//Driver
+	public static final String DRIVER = BASE_URL + "/driver";
+	public static final String ASSIGN_CAR_TO_DRIVER = "/{driverId}/assign-car/{carId}";
+
 
 
 	private EndpointBundle() {

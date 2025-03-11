@@ -1,5 +1,6 @@
 package com.dino.Mega_City_Cabs.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -35,10 +36,12 @@ public class Car extends DateAudit {
 
     @ManyToOne
     @JoinColumn(name = "driver_id", nullable = true)
+    @JsonBackReference
     private Driver driver;
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
+    @JsonBackReference
     private Admin admin;
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)

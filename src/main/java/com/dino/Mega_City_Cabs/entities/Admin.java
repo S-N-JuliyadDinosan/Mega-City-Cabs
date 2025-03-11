@@ -1,5 +1,7 @@
 package com.dino.Mega_City_Cabs.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -26,12 +28,15 @@ public class Admin extends DateAudit {
     private String contactNumber;
 
     @OneToOne(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference // Prevents serialization of User back to Admin
     private User user;
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // Serializes Drivers from Admin
     private List<Car> cars;
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // Serializes Drivers from Admin
     private List<Driver> drivers;
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
