@@ -1,8 +1,5 @@
 package com.dino.Mega_City_Cabs.services;
 
-import com.dino.Mega_City_Cabs.models.Car;
-import com.dino.Mega_City_Cabs.repositories.CarRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

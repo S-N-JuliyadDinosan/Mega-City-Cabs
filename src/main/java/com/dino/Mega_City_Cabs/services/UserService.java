@@ -1,8 +1,7 @@
 package com.dino.Mega_City_Cabs.services;
 
-
-import com.dino.Mega_City_Cabs.models.User;
+import com.dino.Mega_City_Cabs.dtos.LoginDto;
 
 public interface UserService {
-    User saveUser(User user);
+    String login(LoginDto loginDto);
 }

@@ -1,9 +1,7 @@
 package com.dino.Mega_City_Cabs.services;
 
-
-import com.dino.Mega_City_Cabs.models.User;
-import com.dino.Mega_City_Cabs.models.UserPrincipal;
-import com.dino.Mega_City_Cabs.repositories.UserRepo;
+import com.dino.Mega_City_Cabs.entities.User;
+import com.dino.Mega_City_Cabs.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,19 +12,12 @@ import org.springframework.stereotype.Service;
 public class MyUserDetailsService implements UserDetailsService {
 
 	@Autowired
-	private UserRepo repo;
-	
-	
+	private UserRepository userRepo;
+
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-	User user= repo.findByUserName(username);
-	
-	if (user==null) {
-		System.out.println("User 404");
-		throw new UsernameNotFoundException("User 404");
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		User user = userRepo.findByEmail(email)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+		return user; // User implements UserDetails, so return it directly
 	}
-		 return new UserPrincipal(user);
-	}
-
 }
