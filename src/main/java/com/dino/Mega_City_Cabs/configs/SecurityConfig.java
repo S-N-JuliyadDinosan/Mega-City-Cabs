@@ -43,7 +43,7 @@ public class SecurityConfig {
 						// Public endpoints
 						.requestMatchers("/api/v1/users/login", "/api/v1/users/register").permitAll()
 						// Admin-only endpoints
-						.requestMatchers("/api/v1/admins/**", "/api/v1/drivers/**").hasRole("ADMIN")
+						.requestMatchers("/api/v1/admins/**", "/api/v1/drivers/**", "/api/v1/cars/**").hasRole("ADMIN")
 						// Other endpoints (to be refined later for drivers/customers)
 						.anyRequest().authenticated()
 				)

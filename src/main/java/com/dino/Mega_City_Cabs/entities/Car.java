@@ -1,13 +1,11 @@
 package com.dino.Mega_City_Cabs.entities;
 
+import com.dino.Mega_City_Cabs.enums.CarStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Data
@@ -18,36 +16,28 @@ public class Car extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Registration number is required")
-    @Column(unique = true)
-    private String regNumber;
+    @Column(name = "reg_number", nullable = false)
+    private String registrationNumber;
 
-    @NotBlank(message = "Model is required")
+    @Column(nullable = false)
     private String model;
 
-    @NotBlank(message = "Make is required")
-    private String make;
+    @Column(nullable = false)
+    private String color;
 
-    private String yearOfManufacture;
+    @Column(nullable = false)
+    private String make;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private CarStatus status = CarStatus.AVAILABLE;
-
-    @ManyToOne
-    @JoinColumn(name = "driver_id", nullable = true)
-    @JsonBackReference
-    private Driver driver;
+    private CarStatus status = CarStatus.NOT_ASSIGNED;
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference // Prevents serialization of Admin from Car
     private Admin admin;
 
-    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Booking> bookings;
-
-    public enum CarStatus {
-        NOT_ASSIGNED, AVAILABLE, BOOKED, MAINTENANCE
-    }
+    @OneToOne(mappedBy = "car")
+    @JsonBackReference // Prevents serialization of Driver from Car
+    private Driver driver;
 }

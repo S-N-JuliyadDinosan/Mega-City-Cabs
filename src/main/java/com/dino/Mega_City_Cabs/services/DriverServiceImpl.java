@@ -6,6 +6,7 @@ import com.dino.Mega_City_Cabs.entities.Admin;
 import com.dino.Mega_City_Cabs.entities.Car;
 import com.dino.Mega_City_Cabs.entities.Driver;
 import com.dino.Mega_City_Cabs.entities.User;
+import com.dino.Mega_City_Cabs.enums.AvailabilityStatus;
 import com.dino.Mega_City_Cabs.repositories.AdminRepository;
 import com.dino.Mega_City_Cabs.repositories.CarRepository;
 import com.dino.Mega_City_Cabs.repositories.DriverRepository;
@@ -73,7 +74,7 @@ public class DriverServiceImpl implements DriverService {
             driver.setNicNumber(driverDto.getNicNumber());
             driver.setDrivingLicenseNumber(driverDto.getDrivingLicenseNumber());
             driver.setContactNumber(driverDto.getContactNumber());
-            driver.setAvailabilityStatus(Driver.AvailabilityStatus.valueOf(driverDto.getAvailabilityStatus()));
+            driver.setAvailabilityStatus(AvailabilityStatus.valueOf(driverDto.getAvailabilityStatus()));
             driver.setAdmin(admin);
 
             // Create User for Driver
@@ -139,7 +140,7 @@ public class DriverServiceImpl implements DriverService {
             }
             driver.setDrivingLicenseNumber(driverDto.getDrivingLicenseNumber());
             driver.setContactNumber(driverDto.getContactNumber());
-            driver.setAvailabilityStatus(Driver.AvailabilityStatus.valueOf(driverDto.getAvailabilityStatus()));
+            driver.setAvailabilityStatus(AvailabilityStatus.valueOf(driverDto.getAvailabilityStatus()));
 
             return driverRepository.save(driver);
         } catch (IllegalArgumentException e) {

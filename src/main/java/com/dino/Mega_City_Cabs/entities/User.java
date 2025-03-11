@@ -31,7 +31,7 @@ public class User extends DateAudit implements UserDetails {
     private String password;
 
     @NotBlank(message = "Role is required")
-    private String role; // "CUSTOMER", "DRIVER", "ADMIN"
+    private String role;
 
     @OneToOne(cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "admin_id", nullable = true)
@@ -48,7 +48,7 @@ public class User extends DateAudit implements UserDetails {
     @JsonManagedReference // Serializes Driver from User
     private Driver driver;
 
-    // Factory method for creating users
+    // Factory method and UserDetails methods unchanged
     public static User createUser(String email, String password, String role, Object entity) {
         User user = new User();
         user.setEmail(email);
@@ -60,7 +60,6 @@ public class User extends DateAudit implements UserDetails {
         return user;
     }
 
-    // UserDetails implementation
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();

@@ -28,11 +28,11 @@ public class Admin extends DateAudit {
     private String contactNumber;
 
     @OneToOne(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference // Prevents serialization of User back to Admin
+    @JsonBackReference // Prevents serialization of User from Admin
     private User user;
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference // Serializes Drivers from Admin
+    @JsonManagedReference // Serializes Cars from Admin
     private List<Car> cars;
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)

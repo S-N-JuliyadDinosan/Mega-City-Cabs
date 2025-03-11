@@ -22,6 +22,14 @@ public class EndpointBundle {
 	public static final String DRIVER = BASE_URL + "/driver";
 	public static final String ASSIGN_CAR_TO_DRIVER = "/{driverId}/assign-car/{carId}";
 
+	//Car
+	public static final String CAR = BASE_URL + "/car";
+	public static final String CAR_STATUS = "/{id}/status";
+	public static final String GET_AVAILABLE_CARS = "/available";
+	public static final String SPECIFIC_CAR_AVAILABLE = "/{id}/availability";
+
+
+
 
 
 	private EndpointBundle() {

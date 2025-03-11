@@ -190,6 +190,8 @@ public class AdminServiceImpl implements AdminService {
                 admin.setContactNumber("1234567890");
                 userRepository.save(user);
                 System.out.println("Initial admin created: admin@megacitycab.com / admin123");
+            }else {
+                System.out.println("Admin user already exists: admin@megacitycab.com");
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to initialize admin user: " + e.getMessage(), e);
