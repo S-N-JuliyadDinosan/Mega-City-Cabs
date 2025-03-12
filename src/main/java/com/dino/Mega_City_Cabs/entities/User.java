@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +17,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "\"user\"")
+@ToString(exclude = {"customer", "admin", "driver"}) // Exclude bidirectional fields
 public class User extends DateAudit implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

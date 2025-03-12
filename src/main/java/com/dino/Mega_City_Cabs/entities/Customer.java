@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"user", "bookings", "billings", "systemLogs"}) // Exclude bidirectional fields
 public class Customer extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

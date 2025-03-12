@@ -28,6 +28,10 @@ public class EndpointBundle {
 	public static final String GET_AVAILABLE_CARS = "/available";
 	public static final String SPECIFIC_CAR_AVAILABLE = "/{id}/availability";
 
+	//Customer
+	public static final String CUSTOMER = BASE_URL + "/customer";
+	public static final String REGISTER = "/register";
+
 
 
 
