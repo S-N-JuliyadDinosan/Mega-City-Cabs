@@ -8,14 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DriverDto {
-    private Long id;
-
+public class RegisterDriverDto {
     @NotBlank(message = ValidationMessages.INVALID_NAME)
     @Pattern(regexp = "^[a-zA-Z\\s]+$", message = ValidationMessages.INVALID_NAME)
     @Size(min = 2, max = 50, message = ValidationMessages.MISMATCH_INPUT)
@@ -39,8 +35,10 @@ public class DriverDto {
 
     private boolean havingCar;
 
-    private Long userId; // Reference to User
-    private List<Long> carIds; // List of Car IDs (assuming a driver can have multiple cars, adjust if single car)
-    private List<Long> bookingIds; // List of Booking IDs
-    private Long adminId; // Reference to Admin (required for creation)
+    @NotBlank(message = ValidationMessages.PASSWORD_NOT_EMPTY)
+    @Size(min = 8, max = 20, message = ValidationMessages.MISMATCH_INPUT)
+    private String password; // Added for registration
+
+    private Long userId; // Optional reference to existing User
+    private Long adminId; // Required reference to Admin
 }
