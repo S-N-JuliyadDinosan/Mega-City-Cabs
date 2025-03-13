@@ -21,7 +21,7 @@ public class Booking extends DateAudit {
     private String pickUpLocation;
 
     @NotBlank(message = "Destination details are required")
-    private String designationDetails;
+    private String destinationDetails; // Renamed for clarity
 
     private LocalDateTime bookingDateTime;
 
@@ -43,6 +43,9 @@ public class Booking extends DateAudit {
 
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     private Billing billing;
+
+    private Double distanceKm; // Added for pricing calculation
+    private Double totalAmount; // Added for customer confirmation
 
     public enum Status {
         PENDING, CONFIRMED, CANCELLED, COMPLETED

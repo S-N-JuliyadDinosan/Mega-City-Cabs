@@ -21,6 +21,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private MyUserDetailsService userDetailsService;
 
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
+
     @Override
     public String login(LoginDto loginDto) {
         try {
@@ -39,5 +42,14 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to process login: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void logout(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Missing or invalid Authorization header");
+        }
+        String token = authHeader.substring(7);
+        tokenBlacklistService.blacklistToken(token);
     }
 }

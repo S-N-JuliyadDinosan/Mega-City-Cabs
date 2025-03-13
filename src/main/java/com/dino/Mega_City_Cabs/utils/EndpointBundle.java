@@ -32,6 +32,20 @@ public class EndpointBundle {
 	public static final String CUSTOMER = BASE_URL + "/customer";
 	public static final String REGISTER = "/register";
 
+	//Booking
+	public static final String BOOKING = BASE_URL + "/booking";
+	public static final String PENDING_BOOKINGS = "/pending";
+	public static final String CUSTOMER_GET_THEIR_BOOKINGS = "/customer/{customerId}";
+	public static final String DRIVER_GET_THEIR_BOOKINGS = "/driver/{driverId}";
+	public static final String ADMIN_ASSIGN_DRIVER = "/{id}/assign";
+	public static final String CUSTOMER_CONFIRM_BOOKING_BY_AMOUNT = "/{id}/confirm";
+	public static final String CUSTOMER_OR_ADMIN_CANCEL_BOOKING = "/{id}/cancel";
+	public static final String DRIVER_COMPLETE_BOOKING = "/{id}/complete";
+
+	//Pricing
+	public static final String PRICING = BASE_URL + "/pricing";
+
+
 
 
 

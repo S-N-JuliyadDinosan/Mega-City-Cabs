@@ -1,9 +1,7 @@
 package com.dino.Mega_City_Cabs.configs;
 
-import com.dino.Mega_City_Cabs.services.JwtService;
-import com.dino.Mega_City_Cabs.services.MyUserDetailsService;
 import com.dino.Mega_City_Cabs.services.TokenBlacklistService;
-import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
@@ -12,96 +10,85 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.security.Key;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private ApplicationContext context;
+    private UserDetailsService userDetailsService;
 
     @Autowired
     private TokenBlacklistService tokenBlacklistService;
 
     @Value("${jwt.secret}")
-    private String secretKey;
+    private String SECRET_KEY;
+
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
-        String requestURI = request.getRequestURI();
+        String username = null;
+        String jwt = null;
 
-        System.out.println("Request URI: " + requestURI);
-        System.out.println("Auth Header: " + authHeader);
+        System.out.println("JwtFilter: Request URI = " + request.getRequestURI());
+        System.out.println("JwtFilter: Auth Header = " + authHeader);
 
-        if (requestURI.equals("/api/v1/users/login") || requestURI.equals("/api/v1/customer/register")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Missing or invalid Authorization header");
-            return;
-        }
-
-        String token = authHeader.substring(7);
-        if (tokenBlacklistService.isTokenBlacklisted(token)) {
-            sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Token blacklisted");
-            return;
-        }
-
-        String userName = jwtService.extractUserName(token);
-        System.out.println("Extracted username: " + userName);
-
-        if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = context.getBean(MyUserDetailsService.class).loadUserByUsername(userName);
-            if (jwtService.validateToken(token, userDetails)) {
-                Claims claims = Jwts.parserBuilder()
-                        .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
-                        .build()
-                        .parseClaimsJws(token)
-                        .getBody();
-                List<String> roles = claims.get("roles", List.class);
-                List<SimpleGrantedAuthority> authorities = roles.stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-
-                System.out.println("Token roles: " + roles);
-                System.out.println("Authorities set: " + authorities);
-
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-                System.out.println("SecurityContext Principal: " + SecurityContextHolder.getContext().getAuthentication().getName());
-                System.out.println("SecurityContext Authorities: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            jwt = authHeader.substring(7);
+            System.out.println("JwtFilter: Token = " + jwt);
+            if (tokenBlacklistService.isTokenBlacklisted(jwt)) {
+                System.out.println("JwtFilter: Token is blacklisted");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token has been blacklisted");
+                return;
             }
+            try {
+                username = Jwts.parserBuilder()
+                        .setSigningKey(getSigningKey())
+                        .build()
+                        .parseClaimsJws(jwt)
+                        .getBody()
+                        .getSubject();
+                System.out.println("JwtFilter: Extracted username = " + username);
+            } catch (ExpiredJwtException e) {
+                System.out.println("JwtFilter: Token expired - " + e.getMessage());
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token has expired");
+                return;
+            } catch (Exception e) {
+                System.out.println("JwtFilter: Token parsing failed - " + e.getMessage());
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+                return;
+            }
+        } else {
+            System.out.println("JwtFilter: No valid Bearer token found");
         }
 
-        System.out.println("Before filter chain");
-        filterChain.doFilter(request, response);
-        System.out.println("After filter chain");
-    }
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            System.out.println("JwtFilter: Loaded UserDetails for " + username);
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+            System.out.println("JwtFilter: Authentication set for " + username);
+        } else {
+            System.out.println("JwtFilter: Skipping auth - username: " + username + ", existing auth: " + SecurityContextHolder.getContext().getAuthentication());
+        }
 
-    private void sendErrorResponse(HttpServletResponse response, int status, String message) throws IOException {
-        response.setStatus(status);
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write("{\"status\": " + status + ", \"message\": \"" + message + "\", \"data\": null}");
+        filterChain.doFilter(request, response);
+        System.out.println("JwtFilter: Filter chain completed");
     }
 }

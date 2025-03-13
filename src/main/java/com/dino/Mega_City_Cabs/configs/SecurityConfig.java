@@ -42,13 +42,15 @@ public class SecurityConfig {
 				.authorizeHttpRequests(request -> {
 					System.out.println("Configuring security rules");
 					request.requestMatchers("/api/v1/users/login", "/api/v1/customer/register").permitAll()
+							.requestMatchers("/api/v1/users/logout").authenticated()
 							.requestMatchers("/api/v1/admins/**", "/api/v1/drivers/**", "/api/v1/cars/**").hasRole("ADMIN")
 							.requestMatchers("/api/v1/customer").hasRole("ADMIN")
-							//.requestMatchers("/api/v1/customer/{id}").hasRole("ADMIN")
 							.requestMatchers(HttpMethod.PUT, "/api/v1/customer/{id}").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
 							.requestMatchers(HttpMethod.DELETE, "/api/v1/customer/{id}").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-							.requestMatchers(HttpMethod.GET, "/api/v1/customer/{id}").hasAnyAuthority( "ROLE_ADMIN")
-							//.requestMatchers(HttpMethod.GET, "/api/v1/customer").hasAnyAuthority( "ROLE_ADMIN")
+							.requestMatchers(HttpMethod.GET, "/api/v1/customer/{id}").hasAnyAuthority("ROLE_ADMIN")
+							.requestMatchers("/api/v1/booking/**").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN", "ROLE_DRIVER")
+							.requestMatchers("/api/v1/pricing/**").hasRole("ADMIN")
+							.requestMatchers("/ws/**").permitAll()
 							.anyRequest().authenticated();
 				})
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

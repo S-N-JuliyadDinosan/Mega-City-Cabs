@@ -1,23 +1,52 @@
 package com.dino.Mega_City_Cabs.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class BookingDto {
-    private Long id;
     private String pickUpLocation;
-    private String designationDetails;
+    private String destinationDetails;
     private LocalDateTime bookingDateTime;
-    private String status;
+    private Long customerId;
+    private double distanceKm; // New field
 
-    private Long customerId; // Reference to Customer
-    private Long driverId;   // Reference to Driver
-    private Long carId;      // Reference to Car
-    private Long billingId;  //Reference to Billing
+    // Getters and Setters
+    public String getPickUpLocation() {
+        return pickUpLocation;
+    }
+
+    public void setPickUpLocation(String pickUpLocation) {
+        this.pickUpLocation = pickUpLocation;
+    }
+
+    public String getDestinationDetails() {
+        return destinationDetails;
+    }
+
+    public void setDestinationDetails(String destinationDetails) {
+        this.destinationDetails = destinationDetails;
+    }
+
+    public LocalDateTime getBookingDateTime() {
+        return bookingDateTime;
+    }
+
+    public void setBookingDateTime(LocalDateTime bookingDateTime) {
+        this.bookingDateTime = bookingDateTime;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public double getDistanceKm() {
+        return distanceKm;
+    }
+
+    public void setDistanceKm(double distanceKm) {
+        this.distanceKm = distanceKm;
+    }
 }
