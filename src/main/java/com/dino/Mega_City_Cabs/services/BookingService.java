@@ -15,5 +15,6 @@ public interface BookingService {
     BookingResponseDto confirmBooking(Long bookingId);
     BookingResponseDto cancelBooking(Long bookingId);
     BookingResponseDto completeBooking(Long bookingId);
-    double calculateTotalAmount(double distanceKm); // New method
+    BookingResponseDto startRide(Long bookingId); // Added for ride start
+    double calculateTotalAmount(double distanceKm); // Already included
 }

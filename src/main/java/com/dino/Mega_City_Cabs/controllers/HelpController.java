@@ -2,6 +2,7 @@ package com.dino.Mega_City_Cabs.controllers;
 
 import com.dino.Mega_City_Cabs.dtos.HelpDto;
 import com.dino.Mega_City_Cabs.services.HelpService;
+import com.dino.Mega_City_Cabs.utils.EndpointBundle;
 import com.dino.Mega_City_Cabs.utils.ResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/help")
+@RequestMapping(EndpointBundle.HELP)
 public class HelpController {
 
     @Autowired
@@ -30,7 +31,7 @@ public class HelpController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(EndpointBundle.ID)
     public ResponseEntity<ResponseWrapper<HelpDto>> updateHelp(
             @PathVariable Long id, @Valid @RequestBody HelpDto helpDto) {
         try {
@@ -43,7 +44,7 @@ public class HelpController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(EndpointBundle.ID)
     public ResponseEntity<ResponseWrapper<String>> deleteHelp(@PathVariable Long id) {
         try {
             helpService.deleteHelp(id);
@@ -55,7 +56,7 @@ public class HelpController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(EndpointBundle.ID)
     public ResponseEntity<ResponseWrapper<HelpDto>> getHelpById(@PathVariable Long id) {
         try {
             HelpDto help = helpService.getHelpById(id);
@@ -74,7 +75,7 @@ public class HelpController {
                 200, "Help articles retrieved successfully", helpList));
     }
 
-    @GetMapping("/category/{category}")
+    @GetMapping(EndpointBundle.GET_HELP_BY_CATEGORY)
     public ResponseEntity<ResponseWrapper<List<HelpDto>>> getHelpByCategory(@PathVariable String category) {
         List<HelpDto> helpList = helpService.getHelpByCategory(category);
         return ResponseEntity.ok(new ResponseWrapper<>(

@@ -1,8 +1,10 @@
 package com.dino.Mega_City_Cabs.controllers;
 
+import com.dino.Mega_City_Cabs.dtos.BillingDto;
 import com.dino.Mega_City_Cabs.dtos.BookingDto;
 import com.dino.Mega_City_Cabs.dtos.BookingResponseDto;
 import com.dino.Mega_City_Cabs.enums.RestApiResponseStatusCodes;
+import com.dino.Mega_City_Cabs.services.BillingService;
 import com.dino.Mega_City_Cabs.services.BookingService;
 import com.dino.Mega_City_Cabs.utils.EndpointBundle;
 import com.dino.Mega_City_Cabs.utils.ResponseWrapper;
@@ -22,6 +24,9 @@ public class BookingController {
 
     @Autowired
     private BookingService bookingService;
+
+    @Autowired
+    private BillingService billingService;
 
     // Customer: Create Booking
     @PostMapping
@@ -217,15 +222,15 @@ public class BookingController {
         }
     }
 
-    // Driver: Complete Booking
-    @PutMapping(EndpointBundle.DRIVER_COMPLETE_BOOKING)
+    // Driver: Start Ride
+    @PutMapping(EndpointBundle.START_RIDE)
     @PreAuthorize("hasAuthority('ROLE_DRIVER')")
-    public ResponseEntity<ResponseWrapper<BookingResponseDto>> completeBooking(@PathVariable Long id) {
+    public ResponseEntity<ResponseWrapper<BookingResponseDto>> startRide(@PathVariable Long id) {
         try {
-            BookingResponseDto booking = bookingService.completeBooking(id);
+            BookingResponseDto booking = bookingService.startRide(id);
             return ResponseEntity.ok(new ResponseWrapper<>(
                     RestApiResponseStatusCodes.SUCCESS.getCode(),
-                    "Booking completed",
+                    "Ride started successfully",
                     booking
             ));
         } catch (SecurityException e) {
@@ -234,10 +239,74 @@ public class BookingController {
                     e.getMessage(),
                     null
             ));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.BAD_REQUEST.getCode(),
+                    e.getMessage(),
+                    null
+            ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
                     RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
                     ValidationMessages.UPDATE_FAILED,
+                    null
+            ));
+        }
+    }
+
+    // Driver: Complete Booking (Billing created implicitly)
+    @PutMapping(EndpointBundle.DRIVER_COMPLETE_BOOKING)
+    @PreAuthorize("hasAuthority('ROLE_DRIVER')")
+    public ResponseEntity<ResponseWrapper<BookingResponseDto>> completeBooking(@PathVariable Long id) {
+        try {
+            BookingResponseDto booking = bookingService.completeBooking(id);
+            return ResponseEntity.ok(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.SUCCESS.getCode(),
+                    "Booking completed and billed",
+                    booking
+            ));
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.FORBIDDEN.getCode(),
+                    e.getMessage(),
+                    null
+            ));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.BAD_REQUEST.getCode(),
+                    e.getMessage(),
+                    null
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                    ValidationMessages.UPDATE_FAILED,
+                    null
+            ));
+        }
+    }
+
+    // Customer/Driver: Get Billing Details
+    @GetMapping(EndpointBundle.GET_BILLING_DETAILS)
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_DRIVER')")
+    public ResponseEntity<ResponseWrapper<BillingDto>> getBillingById(@PathVariable Long id) {
+        try {
+            BillingDto billing = billingService.getBillingById(id);
+            return ResponseEntity.ok(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.SUCCESS.getCode(),
+                    ValidationMessages.RETRIEVED,
+                    billing
+            ));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.NOT_FOUND.getCode(),
+                    e.getMessage(),
+                    null
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper<>(
+                    RestApiResponseStatusCodes.INTERNAL_SERVER_ERROR.getCode(),
+                    ValidationMessages.RETRIEVED_FAILED,
                     null
             ));
         }

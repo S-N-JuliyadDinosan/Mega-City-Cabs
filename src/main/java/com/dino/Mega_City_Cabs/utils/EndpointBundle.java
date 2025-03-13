@@ -37,10 +37,26 @@ public class EndpointBundle {
 	public static final String PENDING_BOOKINGS = "/pending";
 	public static final String CUSTOMER_GET_THEIR_BOOKINGS = "/customer/{customerId}";
 	public static final String DRIVER_GET_THEIR_BOOKINGS = "/driver/{driverId}";
-	public static final String ADMIN_ASSIGN_DRIVER = "/{id}/assign";
+	public static final String ADMIN_ASSIGN_DRIVER = "/admin/assign/{id}";
 	public static final String CUSTOMER_CONFIRM_BOOKING_BY_AMOUNT = "/{id}/confirm";
 	public static final String CUSTOMER_OR_ADMIN_CANCEL_BOOKING = "/{id}/cancel";
 	public static final String DRIVER_COMPLETE_BOOKING = "/{id}/complete";
+	public static final String START_RIDE = "/start/{id}";
+	public static final String GET_BILLING_DETAILS = "/billing/{id}";
+
+	//SystemLogs
+	public static final String SYSTEM_LOGS = BASE_URL + "/logs";
+	public static final String GET_LOGS_BY_CUSTOMER = "/customer/{customerId}";
+	public static final String GET_LOGS_BY_ADMIN = "/admin/{adminId}";
+	public static final String GET_LOGS_BY_DRIVER = "/driver/{driverId}";
+	public static final String GET_LOGS_BY_LEVEL = "/level/{logLevel}";
+
+	//Help
+	public static final String HELP = BASE_URL + "/help";
+	public static final String GET_HELP_BY_CATEGORY = "/category/{category}";
+
+
+
 
 	//Pricing
 	public static final String PRICING = BASE_URL + "/pricing";
