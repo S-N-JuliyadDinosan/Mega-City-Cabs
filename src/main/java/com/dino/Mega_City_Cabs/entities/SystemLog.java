@@ -12,16 +12,20 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "system_logs")
 public class SystemLog extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "Action performed is required")
+    @Column(name = "action_performed", nullable = false)
     private String actionPerformed; // e.g., "LOGIN", "ADD_BOOKING"
 
+    @Column(name = "timestamp", nullable = false)
     private LocalDateTime timeStamp;
 
+    @Column(name = "log_level")
     private String logLevel; // e.g., "INFO", "ERROR"
 
     @ManyToOne

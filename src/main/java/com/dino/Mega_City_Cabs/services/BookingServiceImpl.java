@@ -2,6 +2,7 @@ package com.dino.Mega_City_Cabs.services;
 
 import com.dino.Mega_City_Cabs.dtos.BookingDto;
 import com.dino.Mega_City_Cabs.dtos.BookingResponseDto;
+import com.dino.Mega_City_Cabs.dtos.SystemLogDto;
 import com.dino.Mega_City_Cabs.entities.*;
 import com.dino.Mega_City_Cabs.enums.AvailabilityStatus;
 import com.dino.Mega_City_Cabs.repositories.*;
@@ -24,6 +25,9 @@ public class BookingServiceImpl implements BookingService {
     private CustomerRepository customerRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private DriverRepository driverRepository;
 
     @Autowired
@@ -34,6 +38,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    private SystemLogService systemLogService;
 
     @Override
     @Transactional
@@ -52,25 +59,41 @@ public class BookingServiceImpl implements BookingService {
             booking.setBookingDateTime(bookingDto.getBookingDateTime());
             booking.setStatus(Booking.Status.PENDING);
             booking.setCustomer(customer);
-            booking.setDistanceKm(bookingDto.getDistanceKm()); // Customer-provided distance
+            booking.setDistanceKm(bookingDto.getDistanceKm());
             booking.setTotalAmount(pricingService.calculateTotalAmount(bookingDto.getDistanceKm()));
 
             Booking savedBooking = bookingRepository.save(booking);
+
+            SystemLogDto log = new SystemLogDto();
+            log.setActionPerformed("BOOKING_CREATED");
+            log.setCustomerId(customer.getId());
+            log.setLogLevel("INFO");
+            systemLogService.logAction(log);
 
             BookingResponseDto responseDto = convertToResponseDto(savedBooking);
             messagingTemplate.convertAndSend("/topic/bookings", responseDto);
 
             return responseDto;
         } catch (SecurityException e) {
+            SystemLogDto log = new SystemLogDto();
+            log.setActionPerformed("BOOKING_CREATION_FAILED");
+            log.setCustomerId(bookingDto.getCustomerId());
+            log.setLogLevel("ERROR");
+            systemLogService.logAction(log);
             throw e;
         } catch (Exception e) {
+            SystemLogDto log = new SystemLogDto();
+            log.setActionPerformed("BOOKING_CREATION_ERROR");
+            log.setCustomerId(bookingDto.getCustomerId());
+            log.setLogLevel("ERROR");
+            systemLogService.logAction(log);
             throw new RuntimeException("Failed to create booking: " + e.getMessage(), e);
         }
     }
 
     @Override
     public double calculateTotalAmount(double distanceKm) {
-        return pricingService.calculateTotalAmount(distanceKm); // Expose for customer preview
+        return pricingService.calculateTotalAmount(distanceKm);
     }
 
     @Override
@@ -120,12 +143,26 @@ public class BookingServiceImpl implements BookingService {
             booking.setDriver(driver);
             booking.setCar(car);
             booking.setStatus(Booking.Status.CONFIRMED);
-            driver.setAvailabilityStatus(AvailabilityStatus.ON_DUTY); // Update driver status
+            driver.setAvailabilityStatus(AvailabilityStatus.ON_DUTY);
             driverRepository.save(driver);
 
             Booking updatedBooking = bookingRepository.save(booking);
+
+            SystemLogDto log = new SystemLogDto();
+            log.setActionPerformed("DRIVER_ASSIGNED");
+            log.setCustomerId(booking.getCustomer().getId());
+            log.setDriverId(driverId);
+            log.setLogLevel("INFO");
+            systemLogService.logAction(log);
+
             return convertToResponseDto(updatedBooking);
         } catch (Exception e) {
+            SystemLogDto log = new SystemLogDto();
+            log.setActionPerformed("DRIVER_ASSIGNMENT_FAILED");
+            log.setCustomerId(getCustomerIdForBooking(bookingId));
+            log.setDriverId(driverId);
+            log.setLogLevel("ERROR");
+            systemLogService.logAction(log);
             throw new RuntimeException("Failed to assign driver: " + e.getMessage(), e);
         }
     }
@@ -146,8 +183,20 @@ public class BookingServiceImpl implements BookingService {
 
             booking.setStatus(Booking.Status.CONFIRMED);
             Booking updatedBooking = bookingRepository.save(booking);
+
+            SystemLogDto log = new SystemLogDto();
+            log.setActionPerformed("BOOKING_CONFIRMED");
+            log.setCustomerId(booking.getCustomer().getId());
+            log.setLogLevel("INFO");
+            systemLogService.logAction(log);
+
             return convertToResponseDto(updatedBooking);
         } catch (Exception e) {
+            SystemLogDto log = new SystemLogDto();
+            log.setActionPerformed("BOOKING_CONFIRMATION_FAILED");
+            log.setCustomerId(getCustomerIdForBooking(bookingId));
+            log.setLogLevel("ERROR");
+            systemLogService.logAction(log);
             throw new RuntimeException("Failed to confirm booking: " + e.getMessage(), e);
         }
     }
@@ -171,8 +220,20 @@ public class BookingServiceImpl implements BookingService {
 
             booking.setStatus(Booking.Status.CANCELLED);
             Booking updatedBooking = bookingRepository.save(booking);
+
+            SystemLogDto log = new SystemLogDto();
+            log.setActionPerformed("BOOKING_CANCELLED");
+            log.setCustomerId(booking.getCustomer().getId());
+            log.setLogLevel("INFO");
+            systemLogService.logAction(log);
+
             return convertToResponseDto(updatedBooking);
         } catch (Exception e) {
+            SystemLogDto log = new SystemLogDto();
+            log.setActionPerformed("BOOKING_CANCELLATION_FAILED");
+            log.setCustomerId(getCustomerIdForBooking(bookingId));
+            log.setLogLevel("ERROR");
+            systemLogService.logAction(log);
             throw new RuntimeException("Failed to cancel booking: " + e.getMessage(), e);
         }
     }
@@ -192,11 +253,25 @@ public class BookingServiceImpl implements BookingService {
             }
 
             booking.setStatus(Booking.Status.COMPLETED);
-            booking.getDriver().setAvailabilityStatus(AvailabilityStatus.AVAILABLE); // Free driver
+            booking.getDriver().setAvailabilityStatus(AvailabilityStatus.AVAILABLE);
             driverRepository.save(booking.getDriver());
             Booking updatedBooking = bookingRepository.save(booking);
+
+            SystemLogDto log = new SystemLogDto();
+            log.setActionPerformed("BOOKING_COMPLETED");
+            log.setCustomerId(booking.getCustomer().getId());
+            log.setDriverId(booking.getDriver().getId());
+            log.setLogLevel("INFO");
+            systemLogService.logAction(log);
+
             return convertToResponseDto(updatedBooking);
         } catch (Exception e) {
+            SystemLogDto log = new SystemLogDto();
+            log.setActionPerformed("BOOKING_COMPLETION_FAILED");
+            log.setCustomerId(getCustomerIdForBooking(bookingId));
+            log.setDriverId(getDriverIdForBooking(bookingId));
+            log.setLogLevel("ERROR");
+            systemLogService.logAction(log);
             throw new RuntimeException("Failed to complete booking: " + e.getMessage(), e);
         }
     }
@@ -215,5 +290,17 @@ public class BookingServiceImpl implements BookingService {
         dto.setDistanceKm(booking.getDistanceKm());
         dto.setTotalAmount(booking.getTotalAmount());
         return dto;
+    }
+
+    private Long getCustomerIdForBooking(Long bookingId) {
+        return bookingRepository.findById(bookingId)
+                .map(booking -> booking.getCustomer().getId())
+                .orElse(null);
+    }
+
+    private Long getDriverIdForBooking(Long bookingId) {
+        return bookingRepository.findById(bookingId)
+                .map(booking -> booking.getDriver() != null ? booking.getDriver().getId() : null)
+                .orElse(null);
     }
 }

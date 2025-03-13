@@ -1,14 +1,14 @@
 package com.dino.Mega_City_Cabs.dtos;
 
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class HelpDto {
     private Long id;
+    @NotBlank(message = "Topic is required")
     private String topic;
+    @NotBlank(message = "Description is required")
     private String description;
+    private String category;
 }
