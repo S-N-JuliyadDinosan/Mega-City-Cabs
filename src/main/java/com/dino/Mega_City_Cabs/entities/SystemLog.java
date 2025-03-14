@@ -1,5 +1,6 @@
 package com.dino.Mega_City_Cabs.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,7 @@ public class SystemLog extends DateAudit {
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = true)
+    @JsonIgnore
     private Admin admin;
 
     @ManyToOne

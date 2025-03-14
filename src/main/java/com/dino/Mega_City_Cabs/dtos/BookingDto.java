@@ -7,7 +7,7 @@ public class BookingDto {
     private String destinationDetails;
     private LocalDateTime bookingDateTime;
     private Long customerId;
-    private double distanceKm; // New field
+    private double distanceKm;
 
     // Getters and Setters
     public String getPickUpLocation() {

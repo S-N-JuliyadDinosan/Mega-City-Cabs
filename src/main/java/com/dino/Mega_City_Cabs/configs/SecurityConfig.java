@@ -16,10 +16,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration; // Add this
+import org.springframework.web.cors.CorsConfigurationSource; // Add this
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource; // Add this
+import java.util.Arrays; // Add this
 
 @Configuration
 @EnableWebSecurity
-//@EnableMethodSecurity
 public class SecurityConfig {
 
 	@Autowired
@@ -39,6 +42,7 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(customizer -> customizer.disable())
+				.cors(cors -> cors.configurationSource(corsConfigurationSource())) // Add CORS
 				.authorizeHttpRequests(request -> {
 					System.out.println("Configuring security rules");
 					request.requestMatchers("/api/v1/users/login", "/api/v1/customer/register").permitAll()
@@ -62,6 +66,18 @@ public class SecurityConfig {
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		System.out.println("SecurityFilterChain built");
 		return http.build();
+	}
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Vite frontend
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
+		configuration.setAllowedHeaders(Arrays.asList("*"));
+		configuration.setAllowCredentials(true); // For JWT cookies if needed
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
 	}
 
 	@Bean

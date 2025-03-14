@@ -2,6 +2,7 @@ package com.dino.Mega_City_Cabs.entities;
 
 import com.dino.Mega_City_Cabs.enums.AvailabilityStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -43,10 +44,11 @@ public class Driver extends DateAudit {
     private Car car;
 
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Booking> bookings;
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
-    @JsonBackReference // Prevents serialization of Admin from Driver
+    @JsonIgnore // Prevents serialization of Admin from Driver
     private Admin admin;
 }
