@@ -57,6 +57,9 @@ public class ValidationMessages {
     //CabBooking
     public static final String INVALID_CONTACT_NUMBER = "Contact number must be 10-15 digits";
     public static final String PASSWORD_NOT_EMPTY = "Password cannot be empty";
+    public static final String INVALID_PICKUP_LOCATION = "Pickup location is invalid, Please Try again";
+    public static final String INVALID_DESTINATION = "Destination is invalid, Please choose it correctly";
+
 
 
 }
